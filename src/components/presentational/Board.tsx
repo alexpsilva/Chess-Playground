@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import { PieceDisposition } from './PieceDisposition'
-import { Piece as PieceInterface } from '../../interfaces/piece'
+import { Marker, Piece } from '../../interfaces'
 
 const Container = styled.div`
   width: 500px;
@@ -11,11 +11,13 @@ const Container = styled.div`
   background-size: cover;
 `
 
-export const Board = ({ pieces, onPieceClick = () => {} }: {
-  pieces: PieceInterface[],
-  onPieceClick?: (event) => void
+export const Board = (props: {
+  pieces: Piece[],
+  markers?: Marker[],
+  onPieceClick?: (id: number) => void,
+  onMarkerClick?: (id: number) => void
 }) => (
   <Container>
-    <PieceDisposition pieces={pieces} onPieceClick={onPieceClick}/>
+    <PieceDisposition {...props}/>
   </Container>
 )

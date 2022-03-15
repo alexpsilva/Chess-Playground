@@ -1,10 +1,10 @@
 import React from 'react';
-import { PieceColor, PieceType } from '../../interfaces/piece';
+import { PieceColor, PieceType } from '../../interfaces';
 
 export const Piece = ({type, color, onClick = () => {}}: {
   type: PieceType,
   color: PieceColor,
-  onClick: (event) => void
+  onClick?: (event) => void
 }) => (
   <div style={{
       background: `url(${process.env.PUBLIC_URL}/pieces/${color}/${type}.png)`,

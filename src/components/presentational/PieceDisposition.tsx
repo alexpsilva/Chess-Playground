@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components'
 import { Piece } from './Piece'
-import { Piece as PieceInterface } from '../../interfaces/piece'
+import { Marker as MarkerInterface, Piece as PieceInterface } from '../../interfaces'
+import { Marker } from './Marker';
 
 const GridContainer = styled.div`
   position: absolute;
@@ -22,11 +23,13 @@ const GridContainer = styled.div`
 //   }}
 // `
 
-export const PieceDisposition = ({ pieces, onPieceClick = () => {} }: {
+export const PieceDisposition = ({ pieces, markers, onPieceClick = () => {}, onMarkerClick = () => {} }: {
   pieces: PieceInterface[],
-  onPieceClick?: (event) => void
-}) => {
-  return <GridContainer>
+  markers?: MarkerInterface[],
+  onPieceClick?: (id: number) => void,
+  onMarkerClick?: (id: number) => void
+}) => (
+  <GridContainer>
     {pieces.map((piece) => (
       <div key={piece.id} style={{gridColumn: `col-${piece.position.col}`, gridRow: `row-${piece.position.row}`}} >
         <Piece 
@@ -36,5 +39,10 @@ export const PieceDisposition = ({ pieces, onPieceClick = () => {} }: {
         />
       </div>
     ))}
+    {markers?.map((marker) => (
+      <div key={marker.id} style={{gridColumn: `col-${marker.position.col}`, gridRow: `row-${marker.position.row}`}} >
+        <Marker onClick={() => onMarkerClick(marker.id)}/>
+      </div>
+    ))}
   </GridContainer>
-}
+)
