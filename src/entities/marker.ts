@@ -1,4 +1,4 @@
-import { PiecePosition } from "./piece";
+import { PiecePosition } from ".";
 
 export interface Marker {
   id: number

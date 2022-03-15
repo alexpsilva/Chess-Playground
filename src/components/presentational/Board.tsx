@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
 import { PieceDisposition } from './PieceDisposition'
-import { Marker, Piece } from '../../interfaces'
+import { Marker, Piece } from '../../entities'
 
 const Container = styled.div`
   width: 500px;

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const Marker = ({onClick = () => {}}: {
+export const MarkerPresentation = ({onClick = () => {}}: {
   onClick?: (event) => void
 }) => (
   <div style={{

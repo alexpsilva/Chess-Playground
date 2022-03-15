@@ -1,10 +1,11 @@
 import React from 'react';
-import { PieceColor, PieceType } from '../../interfaces';
+import { PieceColor, PieceType } from '../../entities';
 
-export const Piece = ({type, color, onClick = () => {}}: {
+export const PiecePresentation = ({type, color, onClick = () => {}, children}: {
   type: PieceType,
   color: PieceColor,
-  onClick?: (event) => void
+  onClick?: (event) => void,
+  children?
 }) => (
   <div style={{
       background: `url(${process.env.PUBLIC_URL}/pieces/${color}/${type}.png)`,
@@ -14,5 +15,7 @@ export const Piece = ({type, color, onClick = () => {}}: {
       height: '100%'
     }}
     onClick={onClick}
-  />
+  >
+    {children}
+  </div>
 )
