@@ -16,6 +16,10 @@ export class BoardPosition {
     this.currentColor = boardPosition?.currentColor ?? PieceColor.white
   }
 
+  get pieces(){
+    return Object.values(this.piecesById)
+  }
+
   addPiece(piece: Piece){ 
     this.piecesByRawPosition[piece.position.raw] = piece
     this.piecesById[this.lastId] = piece
@@ -23,16 +27,40 @@ export class BoardPosition {
   }
 
   movePiece(move: Move){
-    const oldRaw = move.piece.position.raw
-    this.piecesByRawPosition = {
-      ...this.piecesByRawPosition,
-      [move.destination.raw]: this.piecesByRawPosition[oldRaw]
-    }
+    const piece = this.piecesById[move.pieceId]
+    piece.position = new PiecePosition({raw: move.destination.raw})
+    piece.hasMoved = true
+
+    const oldRaw = piece.position.raw
+    this.piecesByRawPosition = { ...this.piecesByRawPosition, [move.destination.raw]: piece }
     delete this.piecesByRawPosition[oldRaw]
   }
 
-  get pieces(){
-    return Object.values(this.piecesById)
+  legalMoves = (pieceId: number): Move[] => {
+    const piece = this.piecesById[pieceId]
+    let candidateMoves: Move[] = []
+  
+    switch(piece.type){
+      case PieceType.pawn:
+        // (to-do) check pawn direction
+        candidateMoves = [
+          ...candidateMoves,
+          { pieceId, destination: new PiecePosition({ raw: piece.position.raw + 8 }) }
+        ]
+        if(!piece.hasMoved) {
+          candidateMoves = [
+            ...candidateMoves,
+            { pieceId, destination: new PiecePosition({ raw: piece.position.raw + 16 }) }
+          ]
+        }
+        // (to-do) standard capture
+        // (to-do) en-passant  capture
+    }
+  
+    // (to-do) check move in bounds
+    // (to-do) check move is blocked
+    // (to-do) check move legal (doesn`t expose the king)
+    return candidateMoves
   }
 
   static fromFEN(FEN: string): BoardPosition {

@@ -1,6 +1,6 @@
 import { Piece, PiecePosition } from ".";
 
 export interface Move {
-  piece: Piece,
+  pieceId: number,
   destination: PiecePosition
 }
