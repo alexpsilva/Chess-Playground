@@ -1,17 +1,12 @@
 import React, { useState } from "react"
-import { Marker, Move, Piece, PieceColor, PiecePosition, PiecePositionColumn, PiecePositionRow, PieceType } from "../../entities"
+import { BoardPosition, Marker, Move, Piece, PieceColor, PiecePosition, PieceType } from "../../entities"
 import { BoardPresentation } from "../presentational/board"
 import { calculateLegalMoves } from "./calculate-legal-moves"
 
-const initialPieces: {[x: number]: Piece} = {
-  15: new Piece({id: 15 , type: PieceType.bishop, color: PieceColor.black, position: new PiecePosition({raw: 10})}),
-  16: new Piece({id: 16 , type: PieceType.bishop, color: PieceColor.white, position: new PiecePosition({raw: 15})}),
-  17: new Piece({id: 17 , type: PieceType.pawn, color: PieceColor.white, position: new PiecePosition({raw: 25})}),
-  18: new Piece({id: 18 , type: PieceType.pawn, color: PieceColor.white, position: new PiecePosition({raw: 35})})
-}
+const board = BoardPosition.fromFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
 
 export const GameController = () => {
-  const [pieces, setPieces] = useState(initialPieces)
+  const [pieces, setPieces] = useState(board.pieces)
   const [markers, setMarkers] = useState({})
   const [selectedPiece, setSelectedPiece] = useState(undefined)
   const [colorPlaying, setColorPlaying] = useState(PieceColor.white)
@@ -27,6 +22,7 @@ export const GameController = () => {
 
   const movePiece = (move: Move) => {
     // (to-do) check for capture
+    board.movePiece(move)
     setPieces({
       ...pieces,
       [move.piece.id]: {
@@ -41,7 +37,7 @@ export const GameController = () => {
   }
 
   return <BoardPresentation 
-    pieces={Object.values(pieces)}
+    pieces={pieces}
     markers = {Object.values(markers)}
     onPieceClick={(pieceId: number) => { 
       const piece = pieces[pieceId]

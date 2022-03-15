@@ -24,12 +24,12 @@ export class Piece {
 }
 
 export enum PieceType {
-  pawn = 'pawn',
-  knight = 'knight',
-  bishop = 'bishop',
-  rook = 'rook',
-  queen = 'queen',
-  king = 'king',
+  pawn = 'p',
+  knight = 'n',
+  bishop = 'b',
+  rook = 'r',
+  queen = 'q',
+  king = 'k',
 }
 
 export enum PieceColor {

@@ -28,8 +28,8 @@ export const BoardPositionPresentation = ({ pieces, markers, onPieceClick = () =
   markers?: Marker[],
   onPieceClick?: (id: number) => void,
   onMarkerClick?: (id: number) => void
-}) => (
-  <GridContainer>
+}) => {
+  return <GridContainer>
     {pieces.map((piece) => (
       <div key={piece.id} style={{gridColumn: `col-${piece.position.col}`, gridRow: `row-${piece.position.row}`}} >
         <PiecePresentation 
@@ -47,4 +47,4 @@ export const BoardPositionPresentation = ({ pieces, markers, onPieceClick = () =
       </div>
     ))}
   </GridContainer>
-)
+}
