@@ -1,3 +1,5 @@
+import React from 'react';
+
 export const Piece = ({
   type,
   color
@@ -9,6 +11,5 @@ export const Piece = ({
       width: '100%',
       height: '100%'
     }}
-    alt={`${color} ${type}`}
   />
 )

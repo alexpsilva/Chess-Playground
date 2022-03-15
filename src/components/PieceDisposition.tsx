@@ -1,3 +1,4 @@
+import React from 'react';
 import styled, { css } from 'styled-components'
 import { Piece } from './Piece'
 
@@ -24,7 +25,7 @@ export const PieceDisposition = ({
   pieces
 }) => {
   return <GridContainer>
-    {pieces.map((piece, index) => (
+    {pieces.map((piece, index: number) => (
       <div key={index} style={{gridColumn: `col-${piece.col}`, gridRow: `row-${piece.row}`}} >
         <Piece type={piece.type} color={piece.color}/>
       </div>
