@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { BoardPosition, Marker, Move, Piece, PieceColor, PiecePosition, PieceType } from "../../entities"
+import { BoardPosition, Marker, Move, PieceColor } from "../../entities"
 import { BoardPresentation } from "../presentational/board"
 
 const board = BoardPosition.fromFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
@@ -22,10 +22,11 @@ export const GameController = () => {
   const movePiece = (move: Move) => {
     // (to-do) check for capture
     board.movePiece(move)
-    setMarkers([])
     setPieces(board.pieces)
+    setColorPlaying(board.colorPlaying)
+    
+    setMarkers([])
     setSelectedPiece(undefined)
-    setColorPlaying(colorPlaying === PieceColor.white ? PieceColor.black: PieceColor.white)
   }
 
   return <BoardPresentation 

@@ -6,14 +6,14 @@ export class BoardPosition {
   private piecesByRawPosition: {[x: number]: Piece} = {}
   private lastId: number = 0
 
-  currentColor: PieceColor
+  colorPlaying: PieceColor
 
   constructor(boardPosition?: {
     pieces?: Piece[],
-    currentColor?: PieceColor
+    colorPlaying?: PieceColor
   }) {
     boardPosition?.pieces?.forEach((piece) => this.addPiece(piece))
-    this.currentColor = boardPosition?.currentColor ?? PieceColor.white
+    this.colorPlaying = boardPosition?.colorPlaying ?? PieceColor.white
   }
 
   get pieces(){
@@ -30,10 +30,15 @@ export class BoardPosition {
     const piece = this.piecesById[move.pieceId]
     piece.position = new PiecePosition({raw: move.destination.raw})
     piece.hasMoved = true
+    this.switchPlayer()
 
     const oldRaw = piece.position.raw
     this.piecesByRawPosition = { ...this.piecesByRawPosition, [move.destination.raw]: piece }
     delete this.piecesByRawPosition[oldRaw]
+  }
+
+  switchPlayer() {
+    this.colorPlaying = this.colorPlaying === PieceColor.white ? PieceColor.black : PieceColor.white
   }
 
   legalMoves = (pieceId: number): Move[] => {
@@ -42,15 +47,15 @@ export class BoardPosition {
   
     switch(piece.type){
       case PieceType.pawn:
-        // (to-do) check pawn direction
+        const pawnDirection = this.colorPlaying === PieceColor.white ? 1 : -1
         candidateMoves = [
           ...candidateMoves,
-          { pieceId, destination: new PiecePosition({ raw: piece.position.raw + 8 }) }
+          { pieceId, destination: new PiecePosition({ raw: piece.position.raw + pawnDirection*8 }) }
         ]
         if(!piece.hasMoved) {
           candidateMoves = [
             ...candidateMoves,
-            { pieceId, destination: new PiecePosition({ raw: piece.position.raw + 16 }) }
+            { pieceId, destination: new PiecePosition({ raw: piece.position.raw + pawnDirection*16 }) }
           ]
         }
         // (to-do) standard capture
@@ -70,7 +75,7 @@ export class BoardPosition {
 
     let [piecesString, currentColor] = splitFEN
     piecesString = piecesString.replace(/\//g, '')
-    newBoard.currentColor = currentColor === 'w' ? PieceColor.white : PieceColor.black
+    newBoard.colorPlaying = currentColor === 'w' ? PieceColor.white : PieceColor.black
 
     let currentRaw = 0
     for(let stringIndex = 0; stringIndex < piecesString.length; stringIndex++) {
