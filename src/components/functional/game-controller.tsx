@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { Marker, Move, Piece, PieceColor, PiecePosition, PiecePositionColumn, PiecePositionRow, PieceType } from "../../entities"
-import { Board } from "../presentational/Board"
-import { calculateLegalMoves } from "./calculateLegalMoves"
+import { BoardPresentation } from "../presentational/board"
+import { calculateLegalMoves } from "./calculate-legal-moves"
 
 const initialPieces: {[x: number]: Piece} = {
   15: new Piece({id: 15 , type: PieceType.bishop, color: PieceColor.black, position: new PiecePosition({raw: 10})}),
@@ -40,7 +40,7 @@ export const GameController = () => {
     setColorPlaying(colorPlaying === PieceColor.white ? PieceColor.black: PieceColor.white)
   }
 
-  return <Board 
+  return <BoardPresentation 
     pieces={Object.values(pieces)}
     markers = {Object.values(markers)}
     onPieceClick={(pieceId: number) => { 

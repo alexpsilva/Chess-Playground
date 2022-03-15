@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components'
-import { PiecePresentation } from './Piece'
-import { MarkerPresentation } from './Marker';
+import { PiecePresentation } from './piece'
+import { MarkerPresentation } from './marker';
 import { Marker, Piece } from '../../entities'
 
 const GridContainer = styled.div`
@@ -23,7 +23,7 @@ const GridContainer = styled.div`
 //   }}
 // `
 
-export const PieceDisposition = ({ pieces, markers, onPieceClick = () => {}, onMarkerClick = () => {} }: {
+export const BoardPositionPresentation = ({ pieces, markers, onPieceClick = () => {}, onMarkerClick = () => {} }: {
   pieces: Piece[],
   markers?: Marker[],
   onPieceClick?: (id: number) => void,

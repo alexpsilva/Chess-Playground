@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components'
-import { PieceDisposition } from './PieceDisposition'
+import { BoardPositionPresentation } from './board-position'
 import { Marker, Piece } from '../../entities'
 
 const Container = styled.div`
@@ -11,13 +11,13 @@ const Container = styled.div`
   background-size: cover;
 `
 
-export const Board = (props: {
+export const BoardPresentation = (props: {
   pieces: Piece[],
   markers?: Marker[],
   onPieceClick?: (id: number) => void,
   onMarkerClick?: (id: number) => void
 }) => (
   <Container>
-    <PieceDisposition {...props}/>
+    <BoardPositionPresentation {...props}/>
   </Container>
 )

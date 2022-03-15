@@ -1,5 +1,5 @@
 import React from 'react';
-import { GameController } from './components/functional/GameController';
+import { GameController } from './components/functional/game-controller';
 
 function App() {
   return (
