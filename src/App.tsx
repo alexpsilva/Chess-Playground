@@ -1,12 +1,10 @@
 import React from 'react';
-import { Board } from "./components/Board";
+import { GameController } from './components/functional/GameController';
 
 function App() {
   return (
     <div className="App">
-      <Board pieces={[
-        {'row': '1', 'col': 'g', 'type': 'pawn', 'color': 'white'}
-      ]}/>
+      <GameController/>
     </div>
   );
 }

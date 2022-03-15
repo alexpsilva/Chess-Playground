@@ -1,6 +1,7 @@
 import React from 'react';
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { Piece } from './Piece'
+import { Piece as PieceInterface } from '../../interfaces/piece'
 
 const GridContainer = styled.div`
   position: absolute;
@@ -21,13 +22,18 @@ const GridContainer = styled.div`
 //   }}
 // `
 
-export const PieceDisposition = ({
-  pieces
+export const PieceDisposition = ({ pieces, onPieceClick = () => {} }: {
+  pieces: PieceInterface[],
+  onPieceClick?: (event) => void
 }) => {
   return <GridContainer>
-    {pieces.map((piece, index: number) => (
-      <div key={index} style={{gridColumn: `col-${piece.col}`, gridRow: `row-${piece.row}`}} >
-        <Piece type={piece.type} color={piece.color}/>
+    {pieces.map((piece) => (
+      <div key={piece.id} style={{gridColumn: `col-${piece.position.col}`, gridRow: `row-${piece.position.row}`}} >
+        <Piece 
+          type={piece.type} 
+          color={piece.color} 
+          onClick={() => onPieceClick(piece.id)}
+        />
       </div>
     ))}
   </GridContainer>
