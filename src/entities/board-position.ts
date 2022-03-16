@@ -20,52 +20,146 @@ export class BoardPosition {
     return Object.values(this.piecesById)
   }
 
-  addPiece(piece: Piece){ 
+  getPieceById(pieceId: number): Piece {
+    return this.piecesById[pieceId]
+  }
+
+  getPieceByRaw(raw: number): Piece {
+    return this.piecesByRawPosition[raw]
+  }
+
+  addPiece(piece: Piece) { 
     this.piecesByRawPosition[piece.position.raw] = piece
     this.piecesById[this.lastId] = piece
     this.lastId += 1
   }
 
-  movePiece(move: Move){
-    const piece = this.piecesById[move.pieceId]
-    piece.position = new PiecePosition({raw: move.destination.raw})
-    piece.hasMoved = true
-    this.switchPlayer()
+  removePieceById(pieceId: number) {
+    const raw = this.piecesById[pieceId].position.raw
+    delete this.piecesByRawPosition[raw]
+    delete this.piecesById[pieceId]
+  }
 
-    const oldRaw = piece.position.raw
-    this.piecesByRawPosition = { ...this.piecesByRawPosition, [move.destination.raw]: piece }
-    delete this.piecesByRawPosition[oldRaw]
+  removePieceByRaw(raw: number) {
+    const pieceId = this.piecesByRawPosition[raw].id
+    delete this.piecesByRawPosition[raw]
+    delete this.piecesById[pieceId]
+  }
+
+  movePiece(move: Move){
+    const { pieceId, destination } = move
+    const piece = {...this.piecesById[pieceId]}
+    
+    this.removePieceById(piece.id)
+    if(destination.raw in this.piecesByRawPosition){
+      this.removePieceByRaw(destination.raw)
+    }
+
+    piece.position = new PiecePosition({raw: destination.raw})
+    piece.hasMoved = true
+    this.piecesByRawPosition[piece.position.raw] = piece
+    this.piecesById[piece.id] = piece
+    
+    this.switchPlayer()
   }
 
   switchPlayer() {
     this.colorPlaying = this.colorPlaying === PieceColor.white ? PieceColor.black : PieceColor.white
   }
 
-  legalMoves = (pieceId: number): Move[] => {
+  positionColor(position: PiecePosition): PieceColor {
+    return this.piecesByRawPosition[position.raw].color
+  }
+
+  isPositionOccupied(position: PiecePosition): boolean {
+    return position.raw in this.piecesByRawPosition
+  }
+
+  capturePositions(pieceId: number): PiecePosition[] {
     const piece = this.piecesById[pieceId]
-    let candidateMoves: Move[] = []
-  
-    switch(piece.type){
+    switch(piece.type) {
       case PieceType.pawn:
-        const pawnDirection = this.colorPlaying === PieceColor.white ? 1 : -1
-        candidateMoves = [
-          ...candidateMoves,
-          { pieceId, destination: new PiecePosition({ raw: piece.position.raw + pawnDirection*8 }) }
-        ]
-        if(!piece.hasMoved) {
-          candidateMoves = [
-            ...candidateMoves,
-            { pieceId, destination: new PiecePosition({ raw: piece.position.raw + pawnDirection*16 }) }
-          ]
-        }
-        // (to-do) standard capture
-        // (to-do) en-passant  capture
+        return this.pawnCapturePositions(piece)
+      case PieceType.knight:
+        return this.knightCapturePositions(piece)
+      case PieceType.bishop:
+        return this.bishopCapturePositions(piece)
+      case PieceType.rook:
+        return this.rookCapturePositions(piece)
+      case PieceType.king:
+        return this.kingCapturePositions(piece)
+      case PieceType.queen:
+        return this.queenCapturePositions(piece)
+      default:
+        throw new Error(`${piece.type} is not a valid piece type`)
     }
-  
-    // (to-do) check move in bounds
-    // (to-do) check move is blocked
-    // (to-do) check move legal (doesn`t expose the king)
-    return candidateMoves
+  }
+
+  pawnCapturePositions(piece: Piece): PiecePosition[] {
+    const positions: PiecePosition[] = []
+    const pawnDirection = this.colorPlaying === PieceColor.white ? 1 : -1
+
+    const leftCapture = piece.position.offset(pawnDirection, -1)
+    if(leftCapture && this.isPositionOccupied(leftCapture) && this.positionColor(leftCapture) !== piece.color){
+      positions.push(leftCapture)
+    }
+
+    const rightCapture = piece.position.offset(pawnDirection, 1)
+    if(rightCapture && this.isPositionOccupied(rightCapture) && this.positionColor(rightCapture) !== piece.color){
+      positions.push(rightCapture)
+    }
+
+    // en-passant
+    return positions
+  }
+
+  knightCapturePositions(piece: Piece): PiecePosition[] {
+    return []
+  }
+
+  bishopCapturePositions(piece: Piece): PiecePosition[] {
+    return []
+  }
+
+  rookCapturePositions(piece: Piece): PiecePosition[] {
+    return []
+  }
+
+  kingCapturePositions(piece: Piece): PiecePosition[] {
+    return []
+  }
+
+  queenCapturePositions(piece: Piece): PiecePosition[] {
+    return []
+  }
+
+  nonCapturePositions(pieceId: number): PiecePosition[] {
+    const piece = this.piecesById[pieceId]
+    const positions: PiecePosition[] = []
+
+    if(piece.type === PieceType.pawn) {
+      const pawnDirection = this.colorPlaying === PieceColor.white ? 1 : -1
+
+      const standardMove = piece.position.offset(pawnDirection, 0)
+      if(standardMove && !this.isPositionOccupied(standardMove)){
+        positions.push(standardMove)
+      }
+
+      const initialMove = piece.position.offset(2*pawnDirection, 0)
+      if(initialMove && !this.isPositionOccupied(initialMove) && !piece.hasMoved) {
+        positions.push(initialMove)
+      }
+    } else if(piece.type === PieceType.king) {
+      // castling
+    }
+    return positions
+  }
+
+  legalPositions = (pieceId: number): PiecePosition[] => {
+    const nonCaptures = this.nonCapturePositions(pieceId)
+    const captures = this.capturePositions(pieceId)
+
+    return [...nonCaptures, ...captures]
   }
 
   static fromFEN(FEN: string): BoardPosition {

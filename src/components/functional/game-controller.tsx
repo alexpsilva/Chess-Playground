@@ -7,14 +7,14 @@ const board = BoardPosition.fromFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR
 export const GameController = () => {
   const [pieces, setPieces] = useState(board.pieces)
   const [markers, setMarkers] = useState({})
-  const [selectedPiece, setSelectedPiece] = useState(undefined)
+  const [selectedPieceId, setSelectedPiece] = useState(undefined)
   const [colorPlaying, setColorPlaying] = useState(PieceColor.white)
 
   const selectPiece = (pieceId: number) => {
-    const legalMoves = board.legalMoves(pieceId)
-    setMarkers(legalMoves.map((move, index): Marker => ({
+    const legalPositions = board.legalPositions(pieceId)
+    setMarkers(legalPositions.map((position, index): Marker => ({
       id: index,
-      position: move.destination
+      position
     })))
     setSelectedPiece(pieceId)
   }
@@ -44,7 +44,7 @@ export const GameController = () => {
     onMarkerClick={(markerId: number) => {
       // we only create markers for legal moves, therefore, we dont need to check if the move is valid
       movePiece({
-        pieceId: pieces[selectedPiece].id,
+        pieceId: selectedPieceId,
         destination: markers[markerId].position
       })
     }}

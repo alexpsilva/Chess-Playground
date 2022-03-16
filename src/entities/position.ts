@@ -8,6 +8,20 @@ export class PiecePosition {
     this.raw = position.raw ?? PiecePosition.rawFromCoordinates(position.coordinates)
   }
 
+  offset(row: number, col: number): PiecePosition{ 
+    if(this.col + col > 8 || this.col + col < 1) {
+      return null
+    }
+
+    if(this.row + row > 8 || this.row + row < 1) {
+      return null
+    }
+    
+    return new PiecePosition({
+      raw: this.raw + row*8 + col
+    })
+  }
+
   get row(): PiecePositionRow {
     return PiecePosition.rowFromRaw(this.raw)
   }
