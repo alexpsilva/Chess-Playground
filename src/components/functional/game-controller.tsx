@@ -33,7 +33,8 @@ export const GameController = () => {
     pieces={pieces}
     markers = {Object.values(markers)}
     onPieceClick={(pieceId: number) => { 
-      const piece = pieces[pieceId]
+      const piece = board.getPieceById(pieceId)
+      console.log(`piece = #${pieceId} ${JSON.stringify(piece)}`)
 
       if(piece.color === colorPlaying) {
         selectPiece(pieceId)

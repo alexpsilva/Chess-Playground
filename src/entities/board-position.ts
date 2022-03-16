@@ -72,7 +72,7 @@ export class BoardPosition {
   }
 
   isPositionOccupied(position: PiecePosition): boolean {
-    return position.raw in this.piecesByRawPosition
+    return position?.raw in this.piecesByRawPosition
   }
 
   capturePositions(pieceId: number): PiecePosition[] {
@@ -114,23 +114,124 @@ export class BoardPosition {
   }
 
   knightCapturePositions(piece: Piece): PiecePosition[] {
-    return []
+    const positions: PiecePosition[] = []
+    const offsets = [
+      [2,  1],  [2,  -1],
+      [-2, 1],  [-2, -1],
+      [1,  2],  [-1,  2],
+      [1, -2],  [-1, -2],
+    ]
+
+    for(const [row, col] of offsets) {
+      const position = piece.position.offset(row, col)
+      if(position && (!this.isPositionOccupied(position) || this.positionColor(position) !== piece.color)){
+        positions.push(position)
+      }
+    }
+    
+    return positions
   }
 
   bishopCapturePositions(piece: Piece): PiecePosition[] {
-    return []
+    const positions: PiecePosition[] = []
+    const directions = [
+      [ 1, 1],  [ 1,-1],
+      [-1, 1],  [-1,-1],
+    ]
+
+    for(const [row, col] of directions) {
+      console.log(`direction = ${[row, col]}`)
+      let distance = 1
+      let wasBlocked = false
+      while(!wasBlocked) {
+        const position = piece.position.offset(distance*row, distance*col)
+        if(!position || this.isPositionOccupied(position)){
+          wasBlocked = true
+        }
+        console.log(`distance = ${distance} | wasBlocked = ${wasBlocked } | position = ${JSON.stringify(position)}`)
+        if(position && (!this.isPositionOccupied(position) || this.positionColor(position) !== piece.color)){
+          positions.push(position)
+        }
+        distance++
+      }
+    }
+    
+    return positions
   }
 
   rookCapturePositions(piece: Piece): PiecePosition[] {
-    return []
+    const positions: PiecePosition[] = []
+    const directions = [
+      [1, 0],  [-1, 0],
+      [0, 1],  [0 ,-1],
+    ]
+
+    for(const [row, col] of directions) {
+      console.log(`direction = ${[row, col]}`)
+      let distance = 1
+      let wasBlocked = false
+      while(!wasBlocked) {
+        const position = piece.position.offset(distance*row, distance*col)
+        if(!position || this.isPositionOccupied(position)){
+          wasBlocked = true
+        }
+        console.log(`distance = ${distance} | wasBlocked = ${wasBlocked } | position = ${JSON.stringify(position)}`)
+        if(position && (!this.isPositionOccupied(position) || this.positionColor(position) !== piece.color)){
+          positions.push(position)
+        }
+        distance++
+      }
+    }
+    
+    return positions
   }
 
   kingCapturePositions(piece: Piece): PiecePosition[] {
-    return []
+    const positions: PiecePosition[] = []
+    const directions = [
+      [1, 0],  [-1, 0],
+      [0, 1],  [0 ,-1],
+      [ 1, 1],  [ 1,-1],
+      [-1, 1],  [-1,-1],
+    ]
+
+    for(const [row, col] of directions) {
+      const position = piece.position.offset(row, col)
+      if(position && (!this.isPositionOccupied(position) || this.positionColor(position) !== piece.color)){
+        positions.push(position)
+      }
+    }
+    
+    return positions
   }
 
   queenCapturePositions(piece: Piece): PiecePosition[] {
-    return []
+    const positions: PiecePosition[] = []
+    const directions = [
+      [1, 0],  [-1, 0],
+      [0, 1],  [0 ,-1],
+      [ 1, 1],  [ 1,-1],
+      [-1, 1],  [-1,-1],
+    ]
+
+    for(const [row, col] of directions) {
+      console.log(`direction = ${[row, col]}`)
+      let distance = 1
+      let wasBlocked = false
+      while(!wasBlocked) {
+        const position = piece.position.offset(distance*row, distance*col)
+        if(!position || this.isPositionOccupied(position)){
+          wasBlocked = true
+        }
+        console.log(`distance = ${distance} | wasBlocked = ${wasBlocked } | position = ${JSON.stringify(position)}`)
+        if(position && (!this.isPositionOccupied(position) || this.positionColor(position) !== piece.color)){
+          positions.push(position)
+        }
+        distance++
+      }
+    }
+    
+    return positions
   }
 
   nonCapturePositions(pieceId: number): PiecePosition[] {
