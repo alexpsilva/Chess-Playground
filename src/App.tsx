@@ -1,10 +1,10 @@
 import React from 'react';
-import { GameController } from './components/functional/GameController';
+import { Game } from './components/functional/game';
 
 function App() {
   return (
     <div className="App">
-      <GameController/>
+      <Game/>
     </div>
   );
 }
