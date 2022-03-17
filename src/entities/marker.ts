@@ -1,6 +1,14 @@
 import { PiecePosition } from ".";
 
-export interface Marker {
+export class Marker {
   id: string
   position: PiecePosition
+
+  constructor(marker: {
+    id: string,
+    position: PiecePosition
+  }) {
+    this.id = marker.id
+    this.position = marker.position
+  }
 }

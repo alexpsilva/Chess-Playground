@@ -48,7 +48,10 @@ export class PieceController {
   }
 
   calculatePawnPlays(piece: PositionedPiece): Play[] {
-    // const distanceLimit = piece.hasMoved ? 2 : 1
+    // (to-do) promotion
+    // (to-do) en-passant
+    // (to-do) double pawn movement
+    // const distanceLimit = piece.hasMoved ? 2 : 1 
     const pawnDirection = piece.color === PieceColor.white ? 1 : -1
     const plays = [
       ...this.calculateDirectionalMovementPlays(
@@ -78,6 +81,7 @@ export class PieceController {
   }
 
   calculateKingPlays(piece: PositionedPiece): Play[] {
+    // (to-do) castling movement
     return this.calculateDirectionalMovementPlays(
       piece, 
       [[1, 0], [-1, 0], [0, 1], [0,-1], [1, 1], [1,-1], [-1, 1], [-1,-1]],

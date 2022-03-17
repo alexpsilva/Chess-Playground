@@ -86,12 +86,10 @@ export const Game = () => {
   
       if(piece.color === colorPlaying) {
         selectPiece(pieceId)
-      } else {
-        // (to-do) attempt to capture
       }
     }}
     markers={possiblePlays.map((play, id): Marker => {
-      return { id: id.toString(), position: play.position }
+      return new Marker({ id: id.toString(), position: play.position })
     })}
     onMarkerClick={(id: string) => {
       possiblePlays[id].perform()
