@@ -45,28 +45,34 @@ export class Move extends Play {
   }
 }
 
-// export class Promote extends Play {
-//   pieceId: string
-//   type: PieceType
+export class Promote extends Play {
+  piece: PositionedPiece
+  type: PieceType
+  promotingPlay: Play
 
-//   constructor(gameOperations: GameOperations, play: {pieceId: string, type: PieceType}) {
-//     super(gameOperations)
-//     this.pieceId = play.pieceId
-//     this.type = play.type
-//   }
+  constructor(
+    gameOperations: GameOperations, 
+    play: {piece: PositionedPiece, type: PieceType, promotingPlay: Play}
+  ) {
+    super(gameOperations)
+    this.piece = play.piece
+    this.type = play.type
+    this.promotingPlay = play.promotingPlay
+  }
 
-//   get position(): PiecePosition {
-//     return 
-//   }
+  get position(): PiecePosition {
+    return this.promotingPlay.position
+  }
 
-//   perform(): void {
-//     this.gameOperations.changePieceType(this.pieceId, this.type)
-//   }
+  perform(): void {
+    this.promotingPlay.perform()
+    this.gameOperations.changeType(this.piece.id, this.type)
+  }
 
-//   toString() {
-//     return null
-//   }
-// }
+  toString() {
+    return null
+  }
+}
 
 export class Capture extends Play {
   capturer: PositionedPiece

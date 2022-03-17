@@ -6,15 +6,18 @@ export class Piece {
   type: PieceType
   color: PieceColor
 
+  hasMoved: boolean
   static lastId: number = 0
 
   constructor(piece: {
     type: PieceType,
-    color: PieceColor
+    color: PieceColor,
+    hasMoved?: boolean,
   }) {
     this.id = (Piece.lastId++).toString()
     this.type = piece.type
     this.color = piece.color
+    this.hasMoved = piece.hasMoved ?? false
   }
 }
 
@@ -48,5 +51,13 @@ export class PositionedPiece{
 
   set color(newColor: PieceColor) {
     this.piece.color = newColor
+  }
+
+  get hasMoved(): boolean {
+    return this.piece.hasMoved
+  }
+
+  set hasMoved(hasMoved: boolean) {
+    this.piece.hasMoved = hasMoved
   }
 }

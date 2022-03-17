@@ -1,6 +1,6 @@
 import { Piece, PiecePosition, Play, PositionedPiece } from "../entities";
 import { PieceColor, PieceType } from "../entities/enums";
-import { Capture, Move } from "../entities/play";
+import { Capture, Castle, Move, Promote } from "../entities/play";
 
 interface GameOperations {
   getPieceByPosition: (raw: number) => Piece | null
@@ -48,20 +48,29 @@ export class PieceController {
   }
 
   calculatePawnPlays(piece: PositionedPiece): Play[] {
-    // (to-do) promotion
     // (to-do) en-passant
-    // (to-do) double pawn movement
-    // const distanceLimit = piece.hasMoved ? 2 : 1 
+    const distanceLimit = piece.hasMoved ? 1 : 2 
     const pawnDirection = piece.color === PieceColor.white ? 1 : -1
     const plays = [
       ...this.calculateDirectionalMovementPlays(
-        piece, [[ pawnDirection, 0]], {distanceLimit: 1, permission: PieceMovementPermisisons.canMove}
+        piece, [[ pawnDirection, 0]], {distanceLimit, permission: PieceMovementPermisisons.canMove}
       ),
       ...this.calculateDirectionalMovementPlays(
         piece, [[ pawnDirection, 1], [ pawnDirection, -1]], {distanceLimit: 1, permission: PieceMovementPermisisons.canCapture}
       )
     ]
-    return plays
+    return plays.map((play) => {
+      const lastRow = piece.color === PieceColor.white ? 8 : 1
+      if(play.position.row == lastRow) {
+        return new Promote(this.gameOperations, {
+          piece,
+          type: PieceType.queen,
+          promotingPlay: play
+        })
+      } else {
+        return play
+      }
+    })
   }
 
   calculateBishopPlays(piece: PositionedPiece): Play[] {
@@ -81,12 +90,26 @@ export class PieceController {
   }
 
   calculateKingPlays(piece: PositionedPiece): Play[] {
-    // (to-do) castling movement
-    return this.calculateDirectionalMovementPlays(
+    const plays = this.calculateDirectionalMovementPlays(
       piece, 
       [[1, 0], [-1, 0], [0, 1], [0,-1], [1, 1], [1,-1], [-1, 1], [-1,-1]],
       {distanceLimit: 1, permission: PieceMovementPermisisons.canMoveAndCapture}
     )
+
+    if(!piece.hasMoved) {
+      for(const rookCol of [1,8]){
+        const rightRookPosition = new PiecePosition({coordinates: {row: piece.position.row, col: rookCol}})
+        const rightRook = this.gameOperations.getPieceByPosition(rightRookPosition.raw)
+        if(rightRook?.hasMoved === false) { // (to-do) check if any of the kings tiles are threateaned
+          plays.push(new Castle(this.gameOperations, {
+            king: piece,
+            rook: new PositionedPiece({piece: rightRook, position: rightRookPosition})
+          }))
+        }
+      }
+    }
+
+    return plays
   }
 
   calculateQueenPlays(piece: PositionedPiece): Play[] {

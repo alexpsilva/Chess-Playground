@@ -34,28 +34,36 @@ export const Game = () => {
     changeType: (pieceId: string, type: PieceType) => {
       const piece = piecesById[pieceId]
       piece.type = type // possible problem! should never write on a state if not through the callback
-      setPieces({
-        ...piecesById,
+      setPieces((_piecesById) => ({
+        ..._piecesById,
         [pieceId]: piece
-      })
+      }))
     },
-    movePiece: (pieceId: string, destination: PiecePosition) => {
+    movePiece: async (pieceId: string, destination: PiecePosition) => {
       const oldRaw = positionsById[pieceId]
       positionsById[pieceId] = destination.raw
       
-      const {[oldRaw]: _, ...newPosition} = idsByPosition
-      setPositions({
-        ...newPosition, 
-        [destination.raw]: pieceId
+      setPositions((_idsByPosition) => {
+        const {[oldRaw]: _, ...newPosition} = _idsByPosition
+        return { ...newPosition, [destination.raw]: pieceId}
       })
+      
+      const piece = piecesById[pieceId]
+      piece.hasMoved = true // possible problem! should never write on a state if not through the callback
+      setPieces((_piecesById) => ({
+        ..._piecesById,
+        [pieceId]: piece
+      }))
       setSelectedPiece(undefined)
     },
     removePiece: (pieceId: string) => {
       const raw = positionsById[pieceId]
       delete positionsById[pieceId]
       
-      const {[raw]: _, ...newPosition} = idsByPosition
-      setPositions(newPosition)
+      setPositions((_idsByPosition) => {
+        const {[raw]: _, ...newPosition} = _idsByPosition
+        return newPosition
+      })
     }
   })
 
@@ -72,7 +80,7 @@ export const Game = () => {
   }
 
   const passTurn = () => {
-    setColorPlaying(colorPlaying === PieceColor.white ? PieceColor.black : PieceColor.white)
+    setColorPlaying((_colorPlaying) => _colorPlaying === PieceColor.white ? PieceColor.black : PieceColor.white)
     selectPiece(undefined)
   }
 
@@ -91,7 +99,7 @@ export const Game = () => {
     markers={possiblePlays.map((play, id): Marker => {
       return new Marker({ id: id.toString(), position: play.position })
     })}
-    onMarkerClick={(id: string) => {
+    onMarkerClick={async (id: string) => {
       possiblePlays[id].perform()
       passTurn()
     }}
