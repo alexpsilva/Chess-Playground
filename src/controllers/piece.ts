@@ -9,6 +9,12 @@ interface GameOperations {
   removePiece: (pieceId: string) => void,
 }
 
+enum PieceMovementPermisisons {
+  canMove,
+  canCapture,
+  canMoveAndCapture,
+}
+
 export class PieceController {
   gameOperations: GameOperations
   possiblePlays: Play[]
@@ -46,10 +52,10 @@ export class PieceController {
     const pawnDirection = piece.color === PieceColor.white ? 1 : -1
     const plays = [
       ...this.calculateDirectionalMovementPlays(
-        piece, [[ pawnDirection, 0]], {distanceLimit: 1, canCapture: false}
+        piece, [[ pawnDirection, 0]], {distanceLimit: 1, permission: PieceMovementPermisisons.canMove}
       ),
       ...this.calculateDirectionalMovementPlays(
-        piece, [[ pawnDirection, 1], [ pawnDirection, -1]], {distanceLimit: 1, canCapture: true}
+        piece, [[ pawnDirection, 1], [ pawnDirection, -1]], {distanceLimit: 1, permission: PieceMovementPermisisons.canCapture}
       )
     ]
     return plays
@@ -59,7 +65,7 @@ export class PieceController {
     return this.calculateDirectionalMovementPlays(
       piece, 
       [[ 1, 1],  [ 1,-1], [-1, 1],  [-1,-1]],
-      {canCapture: true}
+      {permission: PieceMovementPermisisons.canMoveAndCapture}
     )
   }
 
@@ -67,7 +73,7 @@ export class PieceController {
     return this.calculateDirectionalMovementPlays(
       piece, 
       [[1, 0], [-1, 0], [0, 1], [0,-1]],
-      {canCapture: true}
+      {permission: PieceMovementPermisisons.canMoveAndCapture}
     )
   }
 
@@ -75,7 +81,7 @@ export class PieceController {
     return this.calculateDirectionalMovementPlays(
       piece, 
       [[1, 0], [-1, 0], [0, 1], [0,-1], [1, 1], [1,-1], [-1, 1], [-1,-1]],
-      {distanceLimit: 1, canCapture: true}
+      {distanceLimit: 1, permission: PieceMovementPermisisons.canMoveAndCapture}
     )
   }
 
@@ -83,7 +89,7 @@ export class PieceController {
     return this.calculateDirectionalMovementPlays(
       piece, 
       [[1, 0], [-1, 0], [0, 1], [0,-1], [1, 1], [1,-1], [-1, 1], [-1,-1]],
-      {canCapture: true}
+      {permission: PieceMovementPermisisons.canMoveAndCapture}
     )
   }
 
@@ -108,28 +114,37 @@ export class PieceController {
   private calculateDirectionalMovementPlays(
     piece: PositionedPiece, 
     directions: [number, number][], 
-    options?: {distanceLimit?: number, canCapture?: boolean
-  }): Play[] {
+    options?: {distanceLimit?: number, permission?: PieceMovementPermisisons}
+  ): Play[] {
     const plays: Play[] = []
 
     for(const [row, col] of directions) {
       let distance = 1
-      while(distance < 8) {
+      let wasBlocked = false
+      while(!wasBlocked) {
         const position = piece.position.offset(distance*row, distance*col)
         if(!position){
-          break
+          break // out of bounds
         } 
 
         const play = this.moveOrCapture(piece, position)
-        if(!play || (play instanceof Capture && !options.canCapture)){
-          break
+        const permission = options.permission ?? PieceMovementPermisisons.canMove
+        if(!play 
+          || (play instanceof Capture && permission === PieceMovementPermisisons.canMove)
+          || (play instanceof Move && permission === PieceMovementPermisisons.canCapture)
+        ){
+          break // blocked and cannot proceed
         }
         
         plays.push(play)
         
+        if(play instanceof Capture) {
+          break // can capture but not proceed
+        }
+
         distance++
         if(distance > options?.distanceLimit){
-          break
+          break // piece reached distance limit
         }
       }
     }
