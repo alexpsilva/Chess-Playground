@@ -1,5 +1,4 @@
-export * from './board-position'
 export * from './position'
 export * from './marker'
 export * from './piece'
-export * from './move'
+export * from './play'

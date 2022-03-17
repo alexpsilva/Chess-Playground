@@ -1,38 +1,52 @@
+import { PieceType, PieceColor } from "./enums"
 import { PiecePosition } from "./position"
 
 export class Piece {
-  id: number
+  id: string
   type: PieceType
   color: PieceColor
-  position?: PiecePosition
 
-  hasMoved: boolean
+  static lastId: number = 0
 
   constructor(piece: {
-    id: number,
     type: PieceType,
-    color: PieceColor,
-    position?: PiecePosition,
-    hasMoved?: boolean
+    color: PieceColor
   }) {
-    this.id = piece.id
+    this.id = (Piece.lastId++).toString()
     this.type = piece.type
     this.color = piece.color
-    this.position = piece.position
-    this.hasMoved = piece.hasMoved ?? false
   }
 }
 
-export enum PieceType {
-  pawn = 'p',
-  knight = 'n',
-  bishop = 'b',
-  rook = 'r',
-  queen = 'q',
-  king = 'k',
-}
+export class PositionedPiece{
+  piece: Piece
+  position: PiecePosition
 
-export enum PieceColor {
-  black = 'black',
-  white = 'white',
+  constructor(positionedPiece: {
+    piece: Piece
+    position: PiecePosition
+  }) {
+    this.piece = positionedPiece.piece
+    this.position = positionedPiece.position
+  }
+
+  get id(): string {
+    return this.piece.id
+  }
+
+  get type(): PieceType {
+    return this.piece.type
+  }
+
+  set type(newType: PieceType) {
+    this.piece.type = newType
+  }
+
+  get color(): PieceColor {
+    return this.piece.color
+  }
+
+  set color(newColor: PieceColor) {
+    this.piece.color = newColor
+  }
 }

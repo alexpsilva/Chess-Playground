@@ -1,6 +1,6 @@
 import { PiecePosition } from ".";
 
 export interface Marker {
-  id: number
+  id: string
   position: PiecePosition
 }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { PieceColor, PieceType } from '../../entities';
+import { PieceType, PieceColor } from '../../entities/enums';
 
 export const PiecePresentation = ({type, color, onClick = () => {}, children}: {
   type: PieceType,
