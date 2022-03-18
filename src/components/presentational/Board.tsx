@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const Board = styled.div`
   width: 500px;
   height: 500px;
-  background: url(${process.env.PUBLIC_URL}/board.png);
+  background-image: url(${process.env.PUBLIC_URL}/board.png);
   background-repeat: no-repeat;
   background-size: cover;
 `

@@ -8,7 +8,7 @@ export const PiecePresentation = ({type, color, onClick = () => {}, children}: {
   children?
 }) => (
   <div style={{
-      background: `url(${process.env.PUBLIC_URL}/pieces/${color}-${type}.png)`,
+      backgroundImage: `url(${process.env.PUBLIC_URL}/pieces/${color}-${type}.png)`,
       backgroundRepeat: 'no-repeat',
       backgroundSize: '100%',
       width: '100%',
