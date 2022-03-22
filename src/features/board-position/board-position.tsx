@@ -1,7 +1,9 @@
+import { Dispatch } from '@reduxjs/toolkit';
 import React from 'react';
 import { connect } from 'react-redux';
 import styled from 'styled-components'
 import { Marker, PiecePosition } from '../../entities'
+import { RootState } from '../../redux';
 import { Board } from '../board';
 import Piece from '../piece/piece'
 import { selectAllPiecePositions } from './slice';
@@ -53,8 +55,10 @@ const BoardPosition = ({ rawPositionsByPiece, onPieceClick = () => {} }: {
   )
 }
 
-function mapStateToProps(state) {
+function mapStateToProps(state: RootState) {
   return {rawPositionsByPiece: selectAllPiecePositions(state)}
 }
 
-export default connect(mapStateToProps)(BoardPosition)
+const mapDispatchToProps = (dispatch: Dispatch, ownProps) => {}
+
+export default connect(mapStateToProps, mapDispatchToProps)(BoardPosition)
