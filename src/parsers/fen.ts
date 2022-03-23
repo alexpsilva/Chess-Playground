@@ -16,7 +16,7 @@ export class FENParser {
       fullmoveNumber
     ] = splitFEN
     const playingColor = rawPlayingColor === 'w' ? PieceColor.white : PieceColor.black
-    const pieces = []
+    const pieces: addPieceInput[] = []
     
     piecesString = piecesString.replace(/\//g, '')
     let currentRaw = 0
@@ -28,11 +28,12 @@ export class FENParser {
         currentRaw += charToInt
       }
       else {
-        const piece = new Piece({
+        const position = new PiecePosition({raw: currentRaw + 1})
+        pieces.push({
           type: currentChar.toLowerCase() as PieceType,
-          color: currentChar === currentChar.toUpperCase() ? PieceColor.black : PieceColor.white
+          color: currentChar === currentChar.toUpperCase() ? PieceColor.black : PieceColor.white,
+          position: {row: position.row - 1, col: position.col - 1}
         })
-        pieces.push(new PositionedPiece({piece, position: new PiecePosition({raw: currentRaw + 1})}))
         currentRaw += 1
       }
     }

@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { Piece } from "../../entities";
 import { PieceColor } from "../../entities/enums";
 import { FENParser } from "../../parsers/fen";
 import { AppThunk, RootState } from "../../redux";
-import { addPiece } from "../board-position/slice";
+import { addPiece, clearPositions } from "../board-position/slice";
+import { clearPieces } from "../piece/slice";
 
 export interface GameState {
   currentTurn: number
@@ -32,12 +32,14 @@ export const fromFEN = (FEN: string): AppThunk => (
 ) => {
   const { pieces, playingColor, fullmoveNumber } = FENParser.parse(FEN)
   dispatch(setTurn(fullmoveNumber + (playingColor === PieceColor.black ? 0.5 : 0.0)))
+  dispatch(clearPositions())
+  dispatch(clearPieces())
   for(const piece of pieces) {
     dispatch(addPiece(piece))
   }
 }
 
-export const start = (): AppThunk => (
+export const restart = (): AppThunk => (
   dispatch,
   getState
 ) => {

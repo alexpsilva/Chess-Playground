@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components'
 import { PiecePresentation } from './piece'
 import { MarkerPresentation } from './marker';
-import { Marker, PositionedPiece } from '../../entities'
+import { Marker, PositionedPiece } from '../../../src/entities'
 import { BoardPresentation } from './board';
 
 const GridContainer = styled.div`

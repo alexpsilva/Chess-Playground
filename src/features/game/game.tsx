@@ -3,6 +3,7 @@ import { connect } from "react-redux"
 import BoardPosition from '../board-position/board-position'
 
 const Game = () => {
+  console.log('re-rendering game')
   // const [selectedPieceId, setSelectedPiece] = useState<string>(undefined)
   // const [possiblePlays, setPossiblePlays] = useState<Play[]>([])
   

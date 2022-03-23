@@ -1,9 +1,9 @@
 import React, { useState } from "react"
-import { Marker, Piece, PiecePosition, Play, PositionedPiece } from "../../entities"
-import { PieceColor, PieceType } from "../../entities/enums"
+import { Marker, Piece, PiecePosition, Play, PositionedPiece } from "../../../src/entities"
+import { PieceColor, PieceType } from "../../../src/entities/enums"
 import { BoardPositionPresentation } from "../presentational/board-position"
 import { PieceController } from "../../controllers/piece"
-import { FENParser } from "../../parsers/fen"
+import { FENParser } from "../../../src/parsers/fen"
 
 const {
   pieces: piecesArray, 

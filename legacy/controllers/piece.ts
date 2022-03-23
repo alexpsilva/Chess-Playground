@@ -1,6 +1,6 @@
-import { Piece, PiecePosition, Play, PositionedPiece } from "../entities";
-import { PieceColor, PieceType } from "../entities/enums";
-import { Capture, Castle, Move, Promote } from "../entities/play";
+import { Piece, PiecePosition, Play, PositionedPiece } from "../../src/entities";
+import { PieceColor, PieceType } from "../../src/entities/enums";
+import { Capture, Castle, Move, Promote } from "../../src/entities/play";
 
 interface GameOperations {
   getPieceByPosition: (raw: number) => Piece | null

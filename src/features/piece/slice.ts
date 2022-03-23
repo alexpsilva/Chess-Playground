@@ -1,4 +1,4 @@
-import { AnyAction, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { PieceColor, PieceType } from "../../entities/enums";
 import { RootState } from "../../redux";
 
@@ -26,16 +26,21 @@ export const pieceSlice = createSlice({
       }
       
       state.piecesById[payload.id] = { ...payload }
-      console.log(`[PieceSlice] Added piece #${payload.id}`)
     },
     changeType: (state, {payload: {pieceId, type}}: PayloadAction<{pieceId: string, type: PieceType}>) => {
       state.piecesById[pieceId].type = type
     },
+    clearPieces: (state) => {
+      state.piecesById = {}
+    }
   }
 });
 
-export const { add, changeType } = pieceSlice.actions;
+export const { add, changeType, clearPieces } = pieceSlice.actions;
 export const selectPiece = (state: RootState, pieceId: string): PieceState => state.pieces.piecesById[pieceId];
-export const selectLastPieceId = (state: RootState): string => Object.keys(state.pieces.piecesById)[-1]
+export const selectLastPieceId = (state: RootState): string => {
+  const keys = Object.keys(state.pieces.piecesById)
+  return keys.length ? keys[keys.length - 1] : '0'
+}
 
 export default pieceSlice.reducer;
