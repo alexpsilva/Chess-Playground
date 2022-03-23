@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { BOARD_SIZE } from '../../constants';
 import { RootState } from '../../redux';
 import { Board } from '../board';
+import { Marker } from '../marker';
 import Piece from '../piece/piece'
 import { PiecePositionState, selectAllPiecePositions } from './slice';
 
@@ -26,11 +27,16 @@ const GridItem = ({ children, col, row }) => (
   </div>
 )
 
-const BoardPosition = ({ piecePositions, onPieceClick = () => {} }: {
+const BoardPosition = ({ 
+  piecePositions, 
+  markerPositions, 
+  onPieceClick = () => {},
+  onMarkerClick = () => {}
+}: {
   piecePositions: {[id: string]: PiecePositionState},
-  // markers?: Marker[],
+  markerPositions?: {[id: string]: PiecePositionState},
   onPieceClick?: (id: string) => void,
-  // onMarkerClick?: (id: string) => void
+  onMarkerClick?: (id: string) => void
 }) => {
   // (to-do) Create some logic to avoid multiple elements on the same grid position
   return (
@@ -41,20 +47,16 @@ const BoardPosition = ({ piecePositions, onPieceClick = () => {} }: {
             <Piece id={pieceId} onClick={onPieceClick}/>
           </GridItem> 
         )}
-        {/* {markers?.map((marker) => (
-          <div key={marker.id} style={{gridColumn: `col-${marker.position.col}`, gridRow: `row-${marker.position.row}`}} >
-            <MarkerPresentation onClick={() => onMarkerClick(marker.id)}/>
-          </div>
-        ))} */}
+        {Object.entries(markerPositions ?? {}).map(([markerId, position]) => 
+          <GridItem key={markerId} {...position}>
+            <Marker onClick={onMarkerClick}/>
+          </GridItem> 
+        )}
       </GridContainer>
     </Board>
   )
 }
-
-function mapStateToProps(state: RootState) {
-  return {piecePositions: selectAllPiecePositions(state)}
-}
-
-const mapDispatchToProps = (dispatch: Dispatch, ownProps) => ({})
-
-export default connect(mapStateToProps, mapDispatchToProps)(BoardPosition)
+export default connect(
+  (state: RootState) => ({piecePositions: selectAllPiecePositions(state)}),
+  (dispatch: Dispatch, ownProps) => ({})
+)(BoardPosition)
