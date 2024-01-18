@@ -1,9 +1,9 @@
 import React from 'react';
 import styled from 'styled-components'
-import { PiecePresentation } from './piece'
-import { MarkerPresentation } from './marker';
+import { PiecePresentation } from './Piece'
+import { MarkerPresentation } from './Marker';
 import { Marker, PositionedPiece } from '../../entities'
-import { BoardPresentation } from './board';
+import { BoardPresentation } from './Board';
 
 const GridContainer = styled.div`
   position: absolute;
